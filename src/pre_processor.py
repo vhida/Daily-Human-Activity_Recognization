@@ -4,13 +4,18 @@ import numpy as np
 
 class PreProcessor():
 
-    def __init__(self,filename):
+    def __init__(self):
 
         self.actions = ["walking-forward","walking-left","walking-right","walking-upstairs","walking-downstairs","running forward","jumping Up","sitting","standing","sleeping","elevator-up","elevator-down"]
 
+        if os.path.isfile("../data/processed_data.csv"):
+            os.remove("../data/processed_data.csv")
+            print("old file removed ! ")
+
         self.count = 0
 
-        for f in sorted(os.listdir("../data/raw")):
+        with open("../data/processed_data.csv", 'a') as file:
+            for f in sorted(os.listdir("../data/raw")):
                 mat = scipy.io.loadmat("../data/raw/"+f)
                 rdata  =  mat["sensor_readings"]
                 data = np.asarray(rdata)
@@ -25,9 +30,7 @@ class PreProcessor():
                 #append the label to the last position in the array
                 row_data = np.append(rs,label_code)
                 row_data.astype(float)
-
-                with open(filename, 'a') as f:
-                    f.write(" ".join(map(str, row_data))+"\n")
+                file.write(" ".join(map(str, row_data))+"\n")
                 self.count+=1
                 print(str(f) + " processed")
                 print(self.count)
