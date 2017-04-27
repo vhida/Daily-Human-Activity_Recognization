@@ -1,4 +1,6 @@
 # Daily-Human-Activity_Recognization
+
+
 ##How to Run
 
 
@@ -9,6 +11,11 @@
 `run clustering_classifier for clustering and classification`  
   
 `run oneVSOneSVN and oneVSAll for ensemble`
+
+
 ###Note
+
+
+
 
 
