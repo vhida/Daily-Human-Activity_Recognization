@@ -25,7 +25,7 @@ class OneVSOneSVM():
                 and the rest for validation
             score: validation accuracy
         """
-        self.data = np.genfromtxt("../data/processed_data.csv", delimiter = ' ')
+        self.data = np.genfromtxt("../data/csv_data.csv", delimiter = ',')
         self.clf =  OneVsOneClassifier(SVC(kernel='linear'))
         self.DATA_N = self.data.shape[0]
         self.TRAIN_N = int(np.floor(self.DATA_N/3))

@@ -8,13 +8,18 @@ class PreProcessor():
 
         self.actions = ["walking-forward","walking-left","walking-right","walking-upstairs","walking-downstairs","running forward","jumping Up","sitting","standing","sleeping","elevator-up","elevator-down"]
 
-        if os.path.isfile("../data/processed_data.csv"):
-            os.remove("../data/processed_data.csv")
-            print("old file removed ! ")
+        if os.path.isfile("../data/csv_data.csv"):
+            os.remove("../data/csv_data.csv")
+            print("old csv file removed ! ")
+
+        if os.path.isfile("../data/binary_data.npy"):
+            os.remove("../data/binary_data.npy")
+            print("old binary file removed ! ")
 
         self.count = 0
 
-        with open("../data/processed_data.csv", 'a') as file:
+        temp = []
+        with open("../data/csv_data.csv", 'a') as file:
             for f in sorted(os.listdir("../data/raw")):
                 mat = scipy.io.loadmat("../data/raw/"+f)
                 rdata  =  mat["sensor_readings"]
@@ -22,19 +27,28 @@ class PreProcessor():
                 label = mat["activity"][0]
                 #convert string to number, e.g. walking-forward -->0
                 label_code = self.is_action_valid(label)
+                cat = label_code
                 if  -1 == label_code:
                     print(label)
                     continue
+                if label_code in range(4):
+                    cat = 0
+                if 11==label_code or 10 == label_code:
+                    cat = 1
                 #get 30 features in a numpy 1D array
                 rs  = self.feature_extraction(data)
                 #append the label to the last position in the array
-                row_data = np.append(rs,label_code)
+                row_data = np.append(rs,cat)
+                row_data = np.append(row_data,label_code)
                 row_data.astype(float)
-                file.write(" ".join(map(str, row_data))+"\n")
+                temp.append(row_data)
+                file.write(",".join(map(str, row_data))+"\n")
                 self.count+=1
-                print(str(f) + " processed")
-                print(self.count)
+                #print(str(f) + " processed")
 
+        print(str(self.count) + " rows processed" )
+        #save to binary npy file
+        np.save("../data/binary_data.npy",np.asarray(temp))
                 # np.savetxt(filename,row_data,delimiter=" , ")
 
     def mad(self,a,axis=None):

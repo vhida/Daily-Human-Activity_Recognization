@@ -15,7 +15,7 @@ class OneVSallSVM():
     One vs All Ensemble classifier with SVC as core
     """
     def __init__(self):
-        self.data = np.genfromtxt("../data/processed_data.csv", delimiter = ' ')
+        self.data = np.genfromtxt("../data/csv_data.csv", delimiter = ',')
         self.clf =  OneVsRestClassifier(SVC(kernel='linear'))
         self.DATA_N = self.data.shape[0]
         self.TRAIN_N = int(np.floor(self.DATA_N/3))
