@@ -1,15 +1,16 @@
 import pre_processor as pp
-import oneVSAllSVM as OVA
-import oneVSOne as OVO
+# import oneVSAllSVM as OVA
+# import oneVSOne as OVO
 
-pp.PreProcessor()
+processor = pp.PreProcessor()
+processor.condense()
 
-ova = OVA.OneVSAllSVM()
-ova.run()
-
-ovo = OVO.OneVSOneSVM()
-ovo.run()
-
-
-
-
+# ova = OVA.OneVSAllSVM()
+# ova.run()
+#
+# ovo = OVO.OneVSOneSVM()
+# ovo.run()
+#
+#
+#
+#

@@ -8,47 +8,68 @@ class PreProcessor():
 
         self.actions = ["walking-forward","walking-left","walking-right","walking-upstairs","walking-downstairs","running forward","jumping Up","sitting","standing","sleeping","elevator-up","elevator-down"]
 
-        if os.path.isfile("../data/csv_data.csv"):
-            os.remove("../data/csv_data.csv")
-            print("old csv file removed ! ")
+    def condense(self):
+        return self.process(self.condense_time_series,"../data/condensed_time_series_data")
 
-        if os.path.isfile("../data/binary_data.npy"):
-            os.remove("../data/binary_data.npy")
-            print("old binary file removed ! ")
+    def extract_stats(self):
+        return self.process(self.feature_extraction,"../data/stats_data")
+
+    def condense_time_series(self,np_2d_arr):
+        n_rows = np_2d_arr.shape[0]
+        indice = []
+        factor = n_rows/float(600)
+        limit = int(n_rows/factor)+1
+        for i in range(limit+1):
+            if 600 == len(indice):
+                break
+            index = i*factor
+            if index-int(index) < int(index)+1-index:
+                indice.append(int(index))
+            else:
+                indice.append(int(index)+1)
+        print len(indice)
+        np_600rows_2d_arr = np_2d_arr[indice]
+
+        return np_600rows_2d_arr.flatten()
+
+    def process(self,func,npy_file):
+
+        if os.path.isfile(npy_file):
+            os.remove(npy_file)
+            print("binary file removed ! ")
 
         self.count = 0
 
         temp = []
-        with open("../data/csv_data.csv", 'a') as file:
-            for f in sorted(os.listdir("../data/raw")):
-                mat = scipy.io.loadmat("../data/raw/"+f)
-                rdata  =  mat["sensor_readings"]
+        for f in sorted(os.listdir("../data/raw")):
+                mat = scipy.io.loadmat("../data/raw/" + f)
+                rdata = mat["sensor_readings"]
                 data = np.asarray(rdata)
                 label = mat["activity"][0]
-                #convert string to number, e.g. walking-forward -->0
+                # convert string to number, e.g. walking-forward -->0
                 label_code = self.is_action_valid(label)
                 cat = label_code
-                if  -1 == label_code:
+                if -1 == label_code:
                     print(label)
                     continue
                 if label_code in range(4):
                     cat = 0
-                if 11==label_code or 10 == label_code:
+                if 11 == label_code or 10 == label_code:
                     cat = 1
-                #get 30 features in a numpy 1D array
-                rs  = self.feature_extraction(data)
-                #append the label to the last position in the array
-                row_data = np.append(rs,cat)
-                row_data = np.append(row_data,label_code)
+                # get 30 features in a numpy 1D array
+                rs = func(data)
+                # append the label to the last position in the array
+                row_data = np.append(rs, cat)
+                row_data = np.append(row_data, label_code)
                 row_data.astype(float)
                 temp.append(row_data)
-                file.write(",".join(map(str, row_data))+"\n")
-                self.count+=1
-                #print(str(f) + " processed")
+                self.count += 1
+                # print(str(f) + " processed")
+
 
         print(str(self.count) + " rows processed" )
         #save to binary npy file
-        np.save("../data/binary_data.npy",np.asarray(temp))
+        np.save(npy_file,np.asarray(temp))
                 # np.savetxt(filename,row_data,delimiter=" , ")
 
     def mad(self,a,axis=None):
@@ -110,3 +131,4 @@ class PreProcessor():
             if action.split("-")[0] in act.split("-")[0] and action.split("-")[0] in act.split("-")[0] :
                 return self.actions.index(act)
         return -1
+
