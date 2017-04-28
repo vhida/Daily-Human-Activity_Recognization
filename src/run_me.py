@@ -1,6 +1,6 @@
 import pre_processor as pp
 import oneVSAllSVM as OVA
-import oneVSOne as OVO
+import oneVSOneSVM as OVO
 
 pp.PreProcessor()
 

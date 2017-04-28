@@ -1,5 +1,7 @@
 import scipy.io,os
 import numpy as np
+import scipy.stats as stat
+import scipy.fftpack as fft
 
 
 class PreProcessor():
@@ -65,6 +67,24 @@ class PreProcessor():
             a_median = np.expand_dims(a_median, axis=axis)
 
         return func(np.abs(a - a_median), axis=axis)
+        
+    def maxFreq(self, y):
+        """
+        This function transform y into frequency space through fourier transformation
+        :param y: array-like
+        Input array 
+        :return: the frequency component with strongest intensity        
+        """
+        
+        Fs = 100  # sampleing frequency 100 hz
+        n =len(y)
+        T = n/Fs  #total time span for measurement in raw data
+        k = 0.5*np.arange(n)
+        
+        freq = k/(T) # all possible frequency components    
+        Y = fft.rfft(y) # fft computing 
+              
+        return freq[np.abs(Y)==np.max(np.abs(Y))][0] 
 
     def feature_extraction(self,np_2d_arr):
         #first 5 elements in a row would be min values of 6 attributes
@@ -73,7 +93,11 @@ class PreProcessor():
         means = self.extract(np_2d_arr,np.mean)
         stds = self.extract(np_2d_arr,np.std)
         mads = self.extract(np_2d_arr,self.mad)
-        rs = np.concatenate((mins,maxs,means,stds,mads),axis=0)
+        
+        skew = self.extract(np_2d_arr,stat.skew)
+        kurtosis= self.extract(np_2d_arr, stat.kurtosis)
+        maxfreq = self.extract(np_2d_arr, self.maxFreq)
+        rs = np.concatenate((mins,maxs,means,stds,mads,skew, kurtosis, maxfreq),axis=0)
         return rs
 
     def extract(self,np_2d_arr,function):
