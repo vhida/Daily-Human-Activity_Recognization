@@ -111,16 +111,28 @@ class PreProcessor():
         Input array 
         :return: the frequency component with strongest intensity        
         """
-        
-        Fs = 100  # sampleing frequency 100 hz
-        n =len(y)
-        T = n/Fs  #total time span for measurement in raw data
-        k = 0.5*np.arange(n)
-        
-        freq = k/(T) # all possible frequency components    
-        Y = fft.rfft(y) # fft computing 
+        freq, Y = self.fft_freq(y)
         
         return freq[np.abs(Y)==np.max(np.abs(Y))][0] 
+                    
+    def fft_freq(self, y):
+        
+        """
+        This function transform y into frequency space through fourier transformation
+        :param y: array-like
+        Input array 
+        :return: freq:the frequency components with intensity >1e10-6, Y: corresponding intensity       
+        """
+        Fs = 100  # sampleing frequency 100 hz
+        n =len(y)
+        T = n/Fs
+        k = 0.5*np.arange(n)
+        
+        freq = k/(T) # all possible frequency
+    
+        Y = fft.rfft(y) # fft computing and normalizatin
+        tot = 1e-10
+        return freq[np.abs(Y)>tot], Y[np.abs(Y)>tot]
 
     def feature_extraction(self,np_2d_arr):
         #first 5 elements in a row would be min values of 6 attributes
