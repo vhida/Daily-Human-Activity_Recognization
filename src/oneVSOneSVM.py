@@ -5,9 +5,13 @@ Created on Wed Apr 26 22:09:51 2017
 @author: Jian Yang local
 """
 import numpy as np
+import matplotlib.pyplot as plt
+import  itertools
+
 from sklearn.multiclass import OneVsOneClassifier
 from sklearn.svm import SVC
-from random import shuffle
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
 
 
 
@@ -20,47 +24,91 @@ class OneVSOneSVM():
         """
         Initialization with following parameters:
             data: data matrix
-            DATA_N: total number of data rows
-            TRAIN_N: data is sliced into 3 parts, 2/3 will be used as training
-                and the rest for validation
+            
             score: validation accuracy
+            pred_y: prediction
         """
-        self.data = np.genfromtxt("../data/processed_data.csv", delimiter = ' ')
+#        self.data = np.genfromtxt("../data/processed_data.csv", delimiter = ' ')
+        self.data = np.load("../data/stats_data.npy")
+        X = self.data[:,:-1]
+        Y = self.data[:, -1]
+        self.train_x, self.test_x, self.train_y, self.test_y = train_test_split(
+        X, Y, test_size=0.33, random_state=42)
+        
         self.clf =  OneVsOneClassifier(SVC(kernel='linear'))
-        self.DATA_N = self.data.shape[0]
-        self.TRAIN_N = int(np.floor(self.DATA_N/3))
+       
         self.SCORE = 0
+        self.pred_y = 0
         
     def __str__(self):
         return "the score for ONeVSOneSVM is: " + str(self.score)
         
+    def draw_confusion(self):
+        """
+        print confusion matrix: x-axis is prediction, y_axis is ground truth
+        """
+        #label = np.arange(11,-1,-1)
+        label = np.arange(12)
+        cnf_matrix = confusion_matrix(self.test_y, self.pred_y,labels = label )
+        np.set_printoptions(precision=2)
+        
+        class_names = ["walking-forward","walking-left","walking-right","walking-upstairs","walking-downstairs","run","jump","sitting","standing","sleeping","elevator-up","elevator-down"]
+
+        self.plot_confusion_matrix(cnf_matrix, class_names, title='Confusion matrix, without normalization' )
+        
+        
+    def plot_confusion_matrix(self,cm, classes,
+                          normalize=True,
+                          title='Confusion matrix',
+                          cmap=plt.cm.Blues):
+        """
+        This function prints and plots the confusion matrix.
+        Normalization can be applied by setting `normalize=True`.
+        """
+        
+        np.set_printoptions(precision=2)
+        plt.figure(figsize=(8, 8))
+        
+            
+        if normalize:
+            cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+            print("Normalized confusion matrix")
+        else:
+            print('Confusion matrix, without normalization')
+    
+        print(cm)
+    
+        thresh = cm.max() / 2.
+        for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+            plt.text(j, i, np.round(cm[i, j],2),
+                     horizontalalignment="center",
+                     color="white" if cm[i, j] > thresh else "black")
+            
+        im = plt.imshow(cm, interpolation='nearest', cmap=cmap)
+        plt.title(title)
+#        plt.colorbar()
+        
+        tick_marks = np.arange(len(classes))
+        plt.xticks(tick_marks, classes, rotation=90)
+        plt.yticks(tick_marks, classes)
+            
+        plt.colorbar(im,fraction=0.046, pad=0.04)
+        plt.tight_layout()
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
+        
     def run(self):
         """
-        slice data and fit model, calculate score
+        fit the model, print confusion matrix and score
         """
-        index = np.arange(self.DATA_N)
-        shuffle(index)
         
-        
-        train_index = index[0:self.TRAIN_N]
-        valid_index = index[self.TRAIN_N:]
-
-        print train_index.shape, valid_index.shape
-
-        X = self.data[:,:-1]
-        Y = self.data[:, -1]
-
-        train_x = X[train_index]
-        train_y = Y[train_index]
-        
-        valid_x = X[valid_index]
-        valid_y = Y[valid_index]
-
-        self.clf.fit(train_x, train_y)
-        self.score= self.clf.score(valid_x, valid_y)
-        
-        
+        self.clf.fit(self.train_x, self.train_y)
+        self.score= self.clf.score(self.test_x, self.test_y)
+        self.pred_y =self.clf.predict(self.test_x)
+        self.draw_confusion()
+        print "the score for ONeVSOneSVM is: " + str(self.score)
+    
+  
         
 ovo = OneVSOneSVM()
 ovo.run() 
-print ovo

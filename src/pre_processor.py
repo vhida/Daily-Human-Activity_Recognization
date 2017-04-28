@@ -1,5 +1,8 @@
+
 import scipy.io,os
 import numpy as np
+import scipy.stats as stat
+import scipy.fftpack as fft
 
 
 class PreProcessor():
@@ -100,6 +103,36 @@ class PreProcessor():
             a_median = np.expand_dims(a_median, axis=axis)
 
         return func(np.abs(a - a_median), axis=axis)
+        
+    def maxFreq(self, y):
+        """
+        This function transform y into frequency space through fourier transformation
+        :param y: array-like
+        Input array 
+        :return: the frequency component with strongest intensity        
+        """
+        freq, Y = self.fft_freq(y)
+        
+        return freq[np.abs(Y)==np.max(np.abs(Y))][0] 
+                    
+    def fft_freq(self, y):
+        
+        """
+        This function transform y into frequency space through fourier transformation
+        :param y: array-like
+        Input array 
+        :return: freq:the frequency components with intensity >1e10-6, Y: corresponding intensity       
+        """
+        Fs = 100  # sampleing frequency 100 hz
+        n =len(y)
+        T = n/Fs
+        k = 0.5*np.arange(n)
+        
+        freq = k/(T) # all possible frequency
+    
+        Y = fft.rfft(y) # fft computing and normalizatin
+        tot = 1e-10
+        return freq[np.abs(Y)>tot], Y[np.abs(Y)>tot]
 
     def feature_extraction(self,np_2d_arr):
         #first 5 elements in a row would be min values of 6 attributes
@@ -108,7 +141,13 @@ class PreProcessor():
         means = self.extract(np_2d_arr,np.mean)
         stds = self.extract(np_2d_arr,np.std)
         mads = self.extract(np_2d_arr,self.mad)
-        rs = np.concatenate((mins,maxs,means,stds,mads),axis=0)
+        
+        
+        skew = self.extract(np_2d_arr,stat.skew)
+        kurtosis= self.extract(np_2d_arr, stat.kurtosis)
+        maxfreq = self.extract(np_2d_arr, self.maxFreq)
+        rs = np.concatenate((mins,maxs,means,stds,mads,skew, kurtosis, maxfreq),axis=0)
+        
         return rs
 
     def extract(self,np_2d_arr,function):
@@ -131,4 +170,5 @@ class PreProcessor():
             if action.split("-")[0] in act.split("-")[0] and action.split("-")[0] in act.split("-")[0] :
                 return self.actions.index(act)
         return -1
+
 
