@@ -26,7 +26,8 @@ class OneVSAllSVM():
             score: validation accuracy
             pred_y: prediction
         """
-        self.data = np.genfromtxt("../data/processed_data.csv", delimiter = ' ')
+#        self.data = np.genfromtxt("../data/processed_data.csv", delimiter = ' ')
+        self.data = np.load("../data/stats_data.npy")
         X = self.data[:,:-1]
         Y = self.data[:, -1]
         self.train_x, self.test_x, self.train_y, self.test_y = train_test_split(
