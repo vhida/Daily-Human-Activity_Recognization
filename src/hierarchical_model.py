@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import KFold
+from sklearn.model_selection import train_test_split
 
 
 class Hierarchical_model():
@@ -49,11 +49,7 @@ class Hierarchical_model():
                 return self.arr
 
         for i in range(cv):
-            kf = KFold(n_splits=cv,shuffle=True)
-            for train_index, test_index in kf.split(X):
-                X_train,X_test =  X[train_index],X[test_index]
-                y_train,y_test =  y[train_index],y[test_index]
-                y_test =  y[test_index]
+            X_train,X_test, y_train,y_test =  train_test_split(X,y,test_size=0.3,random_state=50)
 
             model = self.classifier()
             model.fit(X_train,y_train)

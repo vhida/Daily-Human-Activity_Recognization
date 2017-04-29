@@ -17,6 +17,9 @@ class PreProcessor():
     def extract_stats(self):
         return self.process(self.feature_extraction,"../data/stats_data")
 
+    def condense_3d(self):
+        return self.process_3d(self.condense_3d_time_series, "../data/condensed_3d_time_series_data")
+
     def condense_time_series(self,np_2d_arr):
         n_rows = np_2d_arr.shape[0]
         indice = []
@@ -34,6 +37,68 @@ class PreProcessor():
         np_600rows_2d_arr = np_2d_arr[indice]
 
         return np_600rows_2d_arr.flatten()
+
+    def condense_3d_time_series(self,np_2d_arr):
+            n_rows = np_2d_arr.shape[0]
+            indice = []
+            factor = n_rows/float(600)
+            limit = int(n_rows/factor)+1
+            for i in range(limit+1):
+                if 600 == len(indice):
+                    break
+                index = i*factor
+                if index-int(index) < int(index)+1-index:
+                    indice.append(int(index))
+                else:
+                    indice.append(int(index)+1)
+            print len(indice)
+            np_600rows_2d_arr = np_2d_arr[indice]
+            print np_600rows_2d_arr.shape
+            return np_600rows_2d_arr
+
+    def process_3d(self,func,npy_file):
+
+        if os.path.isfile(npy_file):
+            os.remove(npy_file+"_x")
+            os.remove(npy_file+"_y")
+            print("binary file removed ! ")
+
+        self.count = 0
+
+        temp_x = []
+        temp_y = []
+        for f in sorted(os.listdir("../data/raw")):
+                mat = scipy.io.loadmat("../data/raw/" + f)
+                rdata = mat["sensor_readings"]
+                data = np.asarray(rdata)
+                label = mat["activity"][0]
+                # convert string to number, e.g. walking-forward -->0
+                label_code = self.is_action_valid(label)
+                cat = label_code
+                if -1 == label_code:
+                    print(label)
+                    continue
+                if label_code in range(4):
+                    cat = 0
+                if 11 == label_code or 10 == label_code:
+                    cat = 1
+                # get 30 features in a numpy 1D array
+                rs = func(data)
+                # append the label to the last position in the array
+                cat = float(cat)
+                label_code = float(label_code)
+                temp_y.append(np.asarray([cat,label_code]))
+                rs.astype(float)
+                temp_x.append(rs)
+                self.count += 1
+                # print(str(f) + " processed")
+
+        print(str(self.count) + " rows processed")
+        # save to binary npy file
+        np.save(npy_file+"_x", np.asarray(temp_x))
+        np.save(npy_file+"_y", np.asarray(temp_y))
+
+
 
     def process(self,func,npy_file):
 
