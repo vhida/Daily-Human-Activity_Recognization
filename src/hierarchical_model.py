@@ -12,9 +12,9 @@ from sklearn.model_selection import KFold
 
 class Hierarchical_model():
 
-    def __init__(self,classifier):
+    def __init__(self,classifier,filename):
         self.classifier = classifier
-        self.data = np.load('../data/binary_data.npy')
+        self.data = np.load(filename)
 
     def show_plain_score(self,cv):
         train_x = self.data[:, :-2]
@@ -61,10 +61,11 @@ class Hierarchical_model():
             acc.append(accuracy)
         return scores(np.asarray(acc))
 
-
-svc  = Hierarchical_model(SVC)
-nb_cls = Hierarchical_model(RandomForestClassifier)
-rf_cls = Hierarchical_model(RandomForestClassifier)
+#filename = '../data/binary_data.npy'
+filename = '../data/condensed_time_series_data.npy'
+svc  = Hierarchical_model(SVC,filename)
+nb_cls = Hierarchical_model(RandomForestClassifier,filename)
+rf_cls = Hierarchical_model(RandomForestClassifier,filename)
 
 svc.show_plain_score(6)
 svc.show_hierarchy_score(6)

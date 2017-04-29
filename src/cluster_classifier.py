@@ -39,7 +39,7 @@ class Cluster_classifier(BaseEstimator,ClassifierMixin):
         # get the classifier
         # Train the model for each cluster
         for c_no in range(self.K):
-            print "K is ", c_no, "-----------------------------------------------------"
+            # print "K is ", c_no, "-----------------------------------------------------"
             w_c_X = X
             w_c_Y = Y
             list = []
@@ -47,17 +47,17 @@ class Cluster_classifier(BaseEstimator,ClassifierMixin):
                 # collect data cases in the cluster
                 if c_no == labels[index]:
                     list.append(index)
-            print "index for ", c_no
+            # print "index for ", c_no
             print list
             w_c_X = w_c_X[list]
             w_c_Y = w_c_Y[list]
-            print "number in cluster ", c_no, " is ", w_c_Y.shape, "and unique size ::", np.unique(w_c_Y).size
-            print w_c_Y
+            # print "number in cluster ", c_no, " is ", w_c_Y.shape, "and unique size ::", np.unique(w_c_Y).size
+            # print w_c_Y
             if w_c_Y.size != 0:
                 if np.unique(w_c_Y).size == 1:
                     self.clss.append(("no_fit", w_c_Y[0]))
                 else:
-                    print "beging fitting-------------------------"
+                    # print "beging fitting-------------------------"
                     c_m = self.classifier()
                     c_m.fit(w_c_X, w_c_Y)
                     # print w_c_Y.shape, w_c_X.shape
@@ -114,7 +114,8 @@ class Cluster_classifier(BaseEstimator,ClassifierMixin):
             acc.append(accuracy)
         return scores(np.asarray(acc))
 
-data = np.load('../data/binary_data.npy')
+#data = np.load('../data/binary_data.npy')
+data = np.load('../data/condensed_time_series_data.npy')
 
 train_x = data[:, :-2]
 train_y = data[:, -1]
