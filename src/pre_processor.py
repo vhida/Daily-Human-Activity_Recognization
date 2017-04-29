@@ -195,9 +195,13 @@ class PreProcessor():
         
         freq = k/(T) # all possible frequency
     
-        Y = fft.rfft(y) # fft computing and normalizatin
+        Y = abs(fft.rfft(y)) # fft computing and normalizatin
         tot = 1e-10
-        return freq[np.abs(Y)>tot], Y[np.abs(Y)>tot]
+        return freq[Y>tot], Y[Y>tot]
+    
+    def mean_freq(self, y):
+        freq, Y = self.fft_freq(y)
+        return  np.dot(freq,Y)/np.sum(Y)
 
     def feature_extraction(self,np_2d_arr):
         #first 5 elements in a row would be min values of 6 attributes
@@ -207,11 +211,13 @@ class PreProcessor():
         stds = self.extract(np_2d_arr,np.std)
         mads = self.extract(np_2d_arr,self.mad)
         
+       
+        meanfreq = self.extract(np_2d_arr,self.mean_freq)
         
-        skew = self.extract(np_2d_arr,stat.skew)
-        kurtosis= self.extract(np_2d_arr, stat.kurtosis)
+#        skew = self.extract(np_2d_arr,stat.skew)
+#        kurtosis= self.extract(np_2d_arr, stat.kurtosis)
         maxfreq = self.extract(np_2d_arr, self.maxFreq)
-        rs = np.concatenate((mins,maxs,means,stds,mads,skew, kurtosis, maxfreq),axis=0)
+        rs = np.concatenate((mins,maxs,means,stds,mads, maxfreq, meanfreq),axis=0)
         
         return rs
 
