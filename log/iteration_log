@@ -1,0 +1,127 @@
+Training iter #50:   Batch Loss = 7.087494, Accuracy = 0.0599999986589
+PERFORMANCE ON TEST SET: Batch Loss = 7.21132850647, Accuracy = 0.0714285746217
+Training iter #80:   Batch Loss = 3.706288, Accuracy = 0.13750000298
+PERFORMANCE ON TEST SET: Batch Loss = 3.70600986481, Accuracy = 0.10119047761
+Training iter #30000:   Batch Loss = 1.086689, Accuracy = 0.912500023842
+PERFORMANCE ON TEST SET: Batch Loss = 2.08957910538, Accuracy = 0.535714268684
+Training iter #60000:   Batch Loss = 0.753145, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 2.54459166527, Accuracy = 0.547619044781
+Training iter #90000:   Batch Loss = 0.693857, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 2.67729902267, Accuracy = 0.571428596973
+Training iter #120000:   Batch Loss = 0.654011, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 2.70342421532, Accuracy = 0.577380955219
+Training iter #150000:   Batch Loss = 0.611908, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 2.8457493782, Accuracy = 0.559523820877
+Training iter #180000:   Batch Loss = 0.571100, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 2.85998868942, Accuracy = 0.571428596973
+Training iter #210000:   Batch Loss = 0.545061, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 2.57172346115, Accuracy = 0.601190447807
+Training iter #240000:   Batch Loss = 0.508527, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 2.72324609756, Accuracy = 0.601190447807
+Training iter #270000:   Batch Loss = 0.472401, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 2.7932100296, Accuracy = 0.589285731316
+Training iter #300000:   Batch Loss = 0.437841, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 2.8647942543, Accuracy = 0.595238089561
+Training iter #330000:   Batch Loss = 1.083906, Accuracy = 0.850000023842
+PERFORMANCE ON TEST SET: Batch Loss = 2.32812976837, Accuracy = 0.464285701513
+FINAL RESULT: Batch Loss = 2.0129172802, Accuracy = 0.583333313465
+Training iter #500:   Batch Loss = 3.899512, Accuracy = 0.0879999995232
+PERFORMANCE ON TEST SET: Batch Loss = 3.74009180069, Accuracy = 0.095238097012
+Training iter #30000:   Batch Loss = 2.081060, Accuracy = 0.565999984741
+PERFORMANCE ON TEST SET: Batch Loss = 2.32173371315, Accuracy = 0.494047611952
+Training iter #60000:   Batch Loss = 1.281661, Accuracy = 0.84399998188
+PERFORMANCE ON TEST SET: Batch Loss = 2.3153898716, Accuracy = 0.565476179123
+Training iter #90000:   Batch Loss = 0.977222, Accuracy = 0.963999986649
+PERFORMANCE ON TEST SET: Batch Loss = 2.88167381287, Accuracy = 0.565476179123
+Training iter #120000:   Batch Loss = 0.928732, Accuracy = 0.97000002861
+PERFORMANCE ON TEST SET: Batch Loss = 3.14388680458, Accuracy = 0.571428596973
+Training iter #150000:   Batch Loss = 0.870909, Accuracy = 0.995999991894
+PERFORMANCE ON TEST SET: Batch Loss = 3.45716714859, Accuracy = 0.547619044781
+Training iter #180000:   Batch Loss = 0.832591, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 3.71820259094, Accuracy = 0.535714268684
+Training iter #210000:   Batch Loss = 0.816210, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 3.84467744827, Accuracy = 0.535714268684
+Training iter #240000:   Batch Loss = 0.800540, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 3.93861436844, Accuracy = 0.535714268684
+Training iter #270000:   Batch Loss = 0.785139, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 4.00612211227, Accuracy = 0.535714268684
+Training iter #300000:   Batch Loss = 0.770445, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 4.0345454216, Accuracy = 0.529761910439
+Training iter #330000:   Batch Loss = 0.755692, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 4.05386447906, Accuracy = 0.529761910439
+FINAL RESULT: Batch Loss = 4.05630874634, Accuracy = 0.529761910439
+Training iter #500:   Batch Loss = 3.972968, Accuracy = 0.0780000016093
+PERFORMANCE ON TEST SET: Batch Loss = 3.97464084625, Accuracy = 0.047619048506
+Training iter #30000:   Batch Loss = 2.577264, Accuracy = 0.319999992847
+PERFORMANCE ON TEST SET: Batch Loss = 2.57650470734, Accuracy = 0.422619044781
+Training iter #60000:   Batch Loss = 1.835114, Accuracy = 0.639999985695
+PERFORMANCE ON TEST SET: Batch Loss = 2.38876986504, Accuracy = 0.422619044781
+Training iter #90000:   Batch Loss = 1.227304, Accuracy = 0.871999979019
+PERFORMANCE ON TEST SET: Batch Loss = 3.46969604492, Accuracy = 0.416666656733
+Training iter #120000:   Batch Loss = 0.942729, Accuracy = 0.973999977112
+PERFORMANCE ON TEST SET: Batch Loss = 4.62873649597, Accuracy = 0.404761910439
+Training iter #150000:   Batch Loss = 0.820754, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 5.16008138657, Accuracy = 0.422619044781
+Training iter #180000:   Batch Loss = 0.795678, Accuracy = 0.995999991894
+PERFORMANCE ON TEST SET: Batch Loss = 5.42049455643, Accuracy = 0.404761910439
+Training iter #210000:   Batch Loss = 0.770710, Accuracy = 0.995999991894
+PERFORMANCE ON TEST SET: Batch Loss = 5.54438400269, Accuracy = 0.39880952239
+Training iter #240000:   Batch Loss = 0.744474, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 5.59616518021, Accuracy = 0.39880952239
+Training iter #270000:   Batch Loss = 0.728221, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 5.60958194733, Accuracy = 0.39880952239
+Training iter #300000:   Batch Loss = 0.709705, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 5.57834863663, Accuracy = 0.39880952239
+Training iter #330000:   Batch Loss = 0.690953, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 5.55650949478, Accuracy = 0.404761910439
+FINAL RESULT: Batch Loss = 5.55497264862, Accuracy = 0.39880952239
+Training iter #500:   Batch Loss = 3.622540, Accuracy = 0.0560000017285
+PERFORMANCE ON TEST SET: Batch Loss = 3.62980031967, Accuracy = 0.0654761940241
+Training iter #30000:   Batch Loss = 2.008445, Accuracy = 0.628000020981
+PERFORMANCE ON TEST SET: Batch Loss = 2.20864772797, Accuracy = 0.559523820877
+Training iter #60000:   Batch Loss = 1.339920, Accuracy = 0.810000002384
+PERFORMANCE ON TEST SET: Batch Loss = 2.15530180931, Accuracy = 0.559523820877
+Training iter #90000:   Batch Loss = 1.058378, Accuracy = 0.925999999046
+PERFORMANCE ON TEST SET: Batch Loss = 2.17187285423, Accuracy = 0.642857134342
+Training iter #120000:   Batch Loss = 0.894457, Accuracy = 0.987999975681
+PERFORMANCE ON TEST SET: Batch Loss = 2.47427415848, Accuracy = 0.654761910439
+Training iter #150000:   Batch Loss = 0.863011, Accuracy = 0.991999983788
+PERFORMANCE ON TEST SET: Batch Loss = 2.49041104317, Accuracy = 0.660714268684
+Training iter #180000:   Batch Loss = 0.827094, Accuracy = 0.998000025749
+PERFORMANCE ON TEST SET: Batch Loss = 2.72046685219, Accuracy = 0.619047641754
+Training iter #210000:   Batch Loss = 0.810724, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 2.91503429413, Accuracy = 0.595238089561
+Training iter #240000:   Batch Loss = 0.795911, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 3.06870913506, Accuracy = 0.601190447807
+Training iter #270000:   Batch Loss = 0.784575, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 3.15965175629, Accuracy = 0.595238089561
+Training iter #300000:   Batch Loss = 0.772636, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 3.19239997864, Accuracy = 0.589285731316
+Training iter #330000:   Batch Loss = 0.760855, Accuracy = 1.0
+PERFORMANCE ON TEST SET: Batch Loss = 3.20584487915, Accuracy = 0.583333313465
+FINAL RESULT: Batch Loss = 3.20375823975, Accuracy = 0.589285731316
+Training iter #500:   Batch Loss = 4.093837, Accuracy = 0.0359999984503
+PERFORMANCE ON TEST SET: Batch Loss = 3.94141507149, Accuracy = 0.047619048506
+Training iter #30000:   Batch Loss = 1.859783, Accuracy = 0.628000020981
+PERFORMANCE ON TEST SET: Batch Loss = 2.30036044121, Accuracy = 0.553571403027
+Training iter #60000:   Batch Loss = 1.476286, Accuracy = 0.744000017643
+PERFORMANCE ON TEST SET: Batch Loss = 2.17231202126, Accuracy = 0.529761910439
+Training iter #90000:   Batch Loss = 1.181236, Accuracy = 0.847999989986
+PERFORMANCE ON TEST SET: Batch Loss = 2.22554063797, Accuracy = 0.523809552193
+Training iter #120000:   Batch Loss = 1.081620, Accuracy = 0.874000012875
+PERFORMANCE ON TEST SET: Batch Loss = 2.16119837761, Accuracy = 0.559523820877
+Training iter #150000:   Batch Loss = 0.961603, Accuracy = 0.896000027657
+PERFORMANCE ON TEST SET: Batch Loss = 2.21274733543, Accuracy = 0.571428596973
+Training iter #180000:   Batch Loss = 1.396678, Accuracy = 0.740000009537
+PERFORMANCE ON TEST SET: Batch Loss = 2.26886177063, Accuracy = 0.559523820877
+Training iter #210000:   Batch Loss = 0.741448, Accuracy = 0.959999978542
+PERFORMANCE ON TEST SET: Batch Loss = 2.13112521172, Accuracy = 0.595238089561
+Training iter #240000:   Batch Loss = 0.644431, Accuracy = 0.98400002718
+PERFORMANCE ON TEST SET: Batch Loss = 2.20579147339, Accuracy = 0.595238089561
+Training iter #270000:   Batch Loss = 0.685883, Accuracy = 0.959999978542
+PERFORMANCE ON TEST SET: Batch Loss = 2.04540967941, Accuracy = 0.595238089561
+Training iter #300000:   Batch Loss = 0.597326, Accuracy = 0.981999993324
+PERFORMANCE ON TEST SET: Batch Loss = 2.24634289742, Accuracy = 0.595238089561
+Training iter #330000:   Batch Loss = 0.540421, Accuracy = 0.990000009537
+PERFORMANCE ON TEST SET: Batch Loss = 2.21451258659, Accuracy = 0.589285731316
+FINAL RESULT: Batch Loss = 2.19113397598, Accuracy = 0.577380955219
