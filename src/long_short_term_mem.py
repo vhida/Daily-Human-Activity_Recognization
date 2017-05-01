@@ -6,7 +6,13 @@ from sklearn import metrics
 from sklearn.model_selection import train_test_split
 
 
+
 import os
+
+logfile = "../log/iteration_log"
+
+LABELS = ["walking-forward", "walking-left", "walking-right", "walking-upstairs", "walking-downstairs",
+                "running forward", "jumping Up", "sitting", "standing", "sleeping", "elevator-up", "elevator-down"]
 
 # Input Data
 if os.path.isfile("../rnn_log"):
@@ -14,35 +20,35 @@ if os.path.isfile("../rnn_log"):
     print("binary file removed ! ")
 
 X = np.load('../data/condensed_3d_time_series_data_x.npy')
-y = np.load('../data/condensed_3d_time_series_data_y.npy')[:,1]
+y = np.load('../data/condensed_3d_time_series_data_y.npy')[:,-1]
 
-X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.3,random_state=50)
+
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42)
+
 
 training_data_count = len(X_train)  #  training series (with 50% overlap between each serie)
 test_data_count = len(X_test)  #  testing series
 n_steps = len(X_train[0])  # 600 timesteps per series
-print n_steps
 n_input = len(X_train[0][0])  # 6 input parameters per timestep
-print n_input
 
 # LSTM Neural Network's internal structure
 
-n_hidden = 32 # Hidden layer num of features
+n_hidden = 20 # Hidden layer num of features
 n_classes = 12 # Total classes (should go up, or should go down)
 
 
 # Training
 
-learning_rate = 0.0025
-lambda_loss_amount = 0.0015
-training_iters = training_data_count * 300  # Loop 300 times on the dataset
-batch_size = 200
+learning_rate = 0.003
+lambda_loss_amount = 0.0025
+training_iters = training_data_count * 500  # Loop 3000 times on the dataset
+batch_size = 500
 display_iter = 30000  # To show test set accuracy during training
 
 
 def LSTM_RNN(_X, _weights, _biases):
     # Function returns a tensorflow LSTM (RNN) artificial neural network from given parameters.
-    # Moreover, two LSTM cells are stacked which adds deepness to the neural network.
+    # Moreover, 4 LSTM cells are stacked which adds deepness to the neural network.
     # Note, some code of this notebook is inspired from an slightly different
     # RNN architecture used on another dataset:
     # https://tensorhub.com/aymericdamien/tensorflow-rnn
@@ -60,10 +66,14 @@ def LSTM_RNN(_X, _weights, _biases):
     _X = tf.split(_X, n_steps,0)
     # new shape: n_steps * (batch_size, n_hidden)
 
-    # Define two stacked LSTM cells (two recurrent layers deep) with tensorflow
+    # Define 4 stacked LSTM cells (two recurrent layers deep) with tensorflow
     lstm_cell_1 = tf.contrib.rnn.core_rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0, state_is_tuple=True)
     lstm_cell_2 = tf.contrib.rnn.core_rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0, state_is_tuple=True)
+    # lstm_cell_3 = tf.contrib.rnn.core_rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0, state_is_tuple=True)
+    # lstm_cell_4 = tf.contrib.rnn.core_rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0, state_is_tuple=True)
+    # lstm_cell_5 = tf.contrib.rnn.core_rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0, state_is_tuple=True)
     lstm_cells = tf.contrib.rnn.core_rnn_cell.MultiRNNCell([lstm_cell_1, lstm_cell_2], state_is_tuple=True)
+    # lstm_cells = tf.contrib.rnn.core_rnn_cell.MultiRNNCell([lstm_cell_1, lstm_cell_2,lstm_cell_3,lstm_cell_4,lstm_cell_5], state_is_tuple=True)
     # Get LSTM cell output
     outputs, states = tf.contrib.rnn.static_rnn(lstm_cells, _X, dtype=tf.float32)
 
@@ -93,11 +103,10 @@ def extract_batch_size(_train, step, batch_size):
 def one_hot(y_):
     # Function to encode output labels from number indexes
     # e.g.: [[5], [0], [3]] --> [[0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0]]
-    print y_.shape
     y_ = y_.reshape(len(y_))
     n_values = np.max(y_) + 1
-    return np.eye(int(n_values))[np.array(y_, dtype=np.int32)]  # Returns FLOATS
-
+    rs = np.eye(int(n_values))[y_.astype(int)]  # Returns FLOATS
+    return rs
 # Graph input/output
 x = tf.placeholder(tf.float32, [None, n_steps, n_input])
 y = tf.placeholder(tf.float32, [None, n_classes])
@@ -114,12 +123,15 @@ biases = {
 
 pred = LSTM_RNN(x, weights, biases)
 
-# Loss, optimizer and evaluation
 l2 = lambda_loss_amount * sum(
     tf.nn.l2_loss(tf_var) for tf_var in tf.trainable_variables()
 ) # L2 loss prevents this overkill neural network to overfit the data
-cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=pred, logits=y)) + l2 # Softmax loss
+cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=pred)) + l2 # Softmax loss
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost) # Adam Optimizer
+
+# cost = tf.reduce_mean((y * tf.log(pred)) + ((1 - y) * tf.log(1 - pred)))
+# optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)
+
 
 correct_pred = tf.equal(tf.argmax(pred,1), tf.argmax(y,1))
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
@@ -158,7 +170,7 @@ while step * batch_size <= training_iters:
         info = "Training iter #" + str(step * batch_size) + \
               ":   Batch Loss = " + "{:.6f}".format(loss) + \
               ", Accuracy = {}".format(acc)
-        with open("../rnn_log","a") as log:
+        with open(logfile,"a") as log:
             log.write(info+"\n")
 
         # Evaluation on the test set (no learning made here - just evaluation for diagnosis)
@@ -174,7 +186,7 @@ while step * batch_size <= training_iters:
         info = "PERFORMANCE ON TEST SET: " + \
               "Batch Loss = {}".format(loss) + \
               ", Accuracy = {}".format(acc)
-        with open("../rnn_log","a") as log:
+        with open(logfile,"a") as log:
             log.write(info+"\n")
     step += 1
 
@@ -193,9 +205,79 @@ one_hot_predictions, accuracy, final_loss = sess.run(
 test_losses.append(final_loss)
 test_accuracies.append(accuracy)
 
+
 info = "FINAL RESULT: " + \
       "Batch Loss = {}".format(final_loss) + \
       ", Accuracy = {}".format(accuracy)
 
-with open("../rnn_log", "a") as log:
+with open(logfile, "a") as log:
     log.write(info + "\n")
+
+
+
+font = {
+    'family' : 'DejaVu Sans',
+    'weight' : 'bold',
+    'size'   : 14
+}
+matplotlib.rc('font', **font)
+
+width = 12
+height = 12
+plt.figure(figsize=(width, height))
+
+indep_train_axis = np.array(range(batch_size, (len(train_losses)+1)*batch_size, batch_size))
+plt.plot(indep_train_axis, np.array(train_losses),     "b--", label="Train losses")
+plt.plot(indep_train_axis, np.array(train_accuracies), "g--", label="Train accuracies")
+
+indep_test_axis = np.array(range(batch_size, len(test_losses)*display_iter, display_iter)[:-1] + [training_iters])
+plt.plot(indep_test_axis, np.array(test_losses),     "b-", label="Test losses")
+plt.plot(indep_test_axis, np.array(test_accuracies), "g-", label="Test accuracies")
+
+plt.title("Training session's progress over iterations")
+plt.legend(loc='upper right', shadow=True)
+plt.ylabel('Training Progress (Loss or Accuracy values)')
+plt.xlabel('Training iteration')
+
+plt.savefig("../stats/accuracy_loss_curve")
+
+
+
+predictions = one_hot_predictions.argmax(1)
+print "Predictions : "
+print predictions
+
+print "Testing Accuracy: {}%".format(100*accuracy)
+
+print ""
+print "Precision: {}%".format(100*metrics.precision_score(y_test, predictions, average="weighted"))
+print "Recall: {}%".format(100*metrics.recall_score(y_test, predictions, average="weighted"))
+print "f1_score: {}%".format(100*metrics.f1_score(y_test, predictions, average="weighted"))
+
+confusion_matrix = metrics.confusion_matrix(y_test, predictions)
+normalised_confusion_matrix = np.array(confusion_matrix, dtype=np.float32)/np.sum(confusion_matrix)*100
+
+print ""
+print "Confusion matrix (normalised to % of total test data):"
+print normalised_confusion_matrix
+
+
+# Plot Results:
+width = 12
+height = 12
+plt.figure(figsize=(width, height))
+plt.imshow(
+    normalised_confusion_matrix,
+    interpolation='nearest',
+    cmap=plt.cm.rainbow
+)
+plt.title("Confusion matrix \n(normalised to % of total test data)")
+plt.colorbar()
+tick_marks = np.arange(n_classes)
+plt.xticks(tick_marks, LABELS, rotation=90)
+plt.yticks(tick_marks, LABELS)
+plt.tight_layout()
+plt.ylabel('True label')
+plt.xlabel('Predicted label')
+# plt.show()
+plt.savefig("../stats/rnn_confusion_matrix")

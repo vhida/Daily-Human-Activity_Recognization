@@ -8,6 +8,11 @@ from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
+import plotter
+from sklearn import metrics
+from sklearn.model_selection import train_test_split
+
+
 
 class Cluster_classifier(BaseEstimator,ClassifierMixin):
 
@@ -48,7 +53,7 @@ class Cluster_classifier(BaseEstimator,ClassifierMixin):
                 if c_no == labels[index]:
                     list.append(index)
             # print "index for ", c_no
-            print list
+            #print list
             w_c_X = w_c_X[list]
             w_c_Y = w_c_Y[list]
             # print "number in cluster ", c_no, " is ", w_c_Y.shape, "and unique size ::", np.unique(w_c_Y).size
@@ -76,7 +81,10 @@ class Cluster_classifier(BaseEstimator,ClassifierMixin):
         # predict each data case using the model trained on the cluster it belongs to
         for index in np.arange(labels.shape[0]):
             predictor = self.clss[labels[index]]
-            pred_clazz[index] = predictor.predict(X[index].reshape(1, -1))
+            if isinstance(predictor,tuple):
+                pred_clazz[index]=predictor[1]
+            else:
+                pred_clazz[index] = predictor.predict(X[index].reshape(1, -1))
         return pred_clazz
 
     def score(self, X, test_y):
@@ -90,6 +98,7 @@ class Cluster_classifier(BaseEstimator,ClassifierMixin):
         :return:avergae accuracy rate
         """
         acc = []
+        preds = []
         class scores():
             def __init__(self,arr):
                 self.arr = arr
@@ -104,15 +113,13 @@ class Cluster_classifier(BaseEstimator,ClassifierMixin):
                 return self.arr
 
         for i in range(cv):
-            kf = KFold(n_splits=cv,shuffle=True)
-            for train_index, test_index in kf.split(X):
-                X_train,X_test =  X[train_index],X[test_index]
-                y_train,y_test =  y[train_index],y[test_index]
-                y_test =  y[test_index]
-            self.model.fit(X_train,y_train)
-            accuracy = accuracy_score(y_test,self.model.predict(X_test))
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+            self.fit(X_train,y_train)
+            pred = self.predict(X_test)
+            accuracy = accuracy_score(y_test,pred)
             acc.append(accuracy)
-        return scores(np.asarray(acc))
+            preds.append([y_test,pred])
+        return scores(np.asarray(acc)),np.asarray(preds)[-1]
 
 #data = np.load('../data/binary_data.npy')
 data = np.load('../data/condensed_time_series_data.npy')
@@ -121,19 +128,20 @@ train_x = data[:, :-2]
 train_y = data[:, -1]
 
 cls = Cluster_classifier(12,SVC)
-print cls.clustering_accuracy(train_x,train_y)
-scores = cls.cv_func(10,train_x,train_y)
+scores,preds = cls.cv_func(10,train_x,train_y)
 print("Accuracy: %0.4f (+/- %0.4f)" % (scores.mean(), scores.std() * 2))
+print  metrics.confusion_matrix(preds[0], preds[1])
+plotter.plot("../stats/___svm_clustering",12,preds[0],preds[1])
 print scores.get()
 
 cls = Cluster_classifier(12,RandomForestClassifier)
-print cls.clustering_accuracy(train_x,train_y)
-scores = cls.cv_func(10,train_x,train_y)
+scores,preds = cls.cv_func(10,train_x,train_y)
 print("Accuracy: %0.4f (+/- %0.4f)" % (scores.mean(), scores.std() * 2))
+plotter.plot("../stats/___rf_clustering",12,preds[0],preds[1])
 print scores.get()
 
 cls = Cluster_classifier(12,GaussianNB)
-print cls.clustering_accuracy(train_x,train_y)
-scores = cls.cv_func(10,train_x,train_y)
+scores,preds = cls.cv_func(10,train_x,train_y)
 print("Accuracy: %0.4f (+/- %0.4f)" % (scores.mean(), scores.std() * 2))
+plotter.plot("../stats/___nb_clustering",12,preds[0],preds[1])
 print scores.get()

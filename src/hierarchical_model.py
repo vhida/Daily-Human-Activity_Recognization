@@ -60,7 +60,7 @@ class Hierarchical_model():
 #filename = '../data/binary_data.npy'
 filename = '../data/condensed_time_series_data.npy'
 svc  = Hierarchical_model(SVC,filename)
-nb_cls = Hierarchical_model(RandomForestClassifier,filename)
+nb_cls = Hierarchical_model(GaussianNB,filename)
 rf_cls = Hierarchical_model(RandomForestClassifier,filename)
 
 svc.show_plain_score(6)
