@@ -9,7 +9,7 @@ import pre_processor as pp
 processor = pp.PreProcessor()
 processor.condense()
 processor.extract_stats()
-
+processor.condense_3d(60)
 # ova = OVA.OneVSAllSVM()
 # ova.run()
 #

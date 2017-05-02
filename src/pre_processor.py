@@ -3,6 +3,8 @@ import scipy.io,os
 import numpy as np
 import scipy.stats as stat
 import scipy.fftpack as fft
+from sklearn.preprocessing import normalize
+
 
 
 class PreProcessor():
@@ -17,8 +19,8 @@ class PreProcessor():
     def extract_stats(self):
         return self.process(self.feature_extraction,"../data/stats_data")
 
-    def condense_3d(self):
-        return self.process_3d(self.condense_3d_time_series, "../data/condensed_3d_time_series_data")
+    def condense_3d(self,n_step):
+        return self.process_3d(self.condense_3d_time_series, "../data/condensed_3d_time_series_data",n_step)
 
     def condense_time_series(self,np_2d_arr):
         n_rows = np_2d_arr.shape[0]
@@ -33,30 +35,34 @@ class PreProcessor():
                 indice.append(int(index))
             else:
                 indice.append(int(index)+1)
-        print len(indice)
+        # print len(indice)
         np_600rows_2d_arr = np_2d_arr[indice]
 
         return np_600rows_2d_arr.flatten()
 
-    def condense_3d_time_series(self,np_2d_arr):
+    def condense_3d_time_series(self,np_2d_arr,n_step):
             n_rows = np_2d_arr.shape[0]
             indice = []
-            factor = n_rows/float(600)
+            factor = n_rows/float(n_step)
             limit = int(n_rows/factor)+1
+            print "limit is ", limit
             for i in range(limit+1):
-                if 600 == len(indice):
+                if n_step == len(indice):
                     break
                 index = i*factor
+                # print "index is :" ,index
                 if index-int(index) < int(index)+1-index:
                     indice.append(int(index))
                 else:
                     indice.append(int(index)+1)
             print len(indice)
             np_600rows_2d_arr = np_2d_arr[indice]
+            np_600rows_2d_arr = normalize(np_600rows_2d_arr,norm='l1')
+            np_600rows_2d_arr *=100
             print np_600rows_2d_arr.shape
             return np_600rows_2d_arr
 
-    def process_3d(self,func,npy_file):
+    def process_3d(self,func,npy_file,n_step):
 
         if os.path.isfile(npy_file):
             os.remove(npy_file+"_x")
@@ -73,7 +79,7 @@ class PreProcessor():
                 data = np.asarray(rdata)
                 label = mat["activity"][0]
                 # convert string to number, e.g. walking-forward -->0
-                label_code = self.is_action_valid(label)
+                label_code = int(self.is_action_valid(label))
                 cat = label_code
                 if -1 == label_code:
                     print(label)
@@ -83,10 +89,10 @@ class PreProcessor():
                 if 11 == label_code or 10 == label_code:
                     cat = 1
                 # get 30 features in a numpy 1D array
-                rs = func(data)
+                rs = func(data,n_step)
                 # append the label to the last position in the array
-                cat = float(cat)
-                label_code = float(label_code)
+                cat = int(cat)
+                label_code = int(label_code)
                 temp_y.append(np.asarray([cat,label_code]))
                 rs.astype(float)
                 temp_x.append(rs)
