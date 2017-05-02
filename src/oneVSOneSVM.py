@@ -6,12 +6,12 @@ Created on Wed Apr 26 22:09:51 2017
 """
 import numpy as np
 import matplotlib.pyplot as plt
-import  itertools
-
+import itertools
 from sklearn.multiclass import OneVsOneClassifier
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
+
 
 
 
@@ -27,9 +27,12 @@ class OneVSOneSVM():
             
             score: validation accuracy
             pred_y: prediction
+            
         """
-#        self.data = np.genfromtxt("../data/processed_data.csv", delimiter = ' ')
-        self.data = np.load("../data/stats_data.npy")
+        
+#        self.data = np.genfromtxt("../data/processed_data.csv", delimiter = ',')
+        self.data = np.genfromtxt("../data/processed_data_window.csv", delimiter = ',')
+#        self.data = np.genfromtxt("../data/processed_windowdata.csv", delimiter = ',')
         X = self.data[:,:-1]
         Y = self.data[:, -1]
         self.train_x, self.test_x, self.train_y, self.test_y = train_test_split(
@@ -52,13 +55,15 @@ class OneVSOneSVM():
         cnf_matrix = confusion_matrix(self.test_y, self.pred_y,labels = label )
         np.set_printoptions(precision=2)
         
-        class_names = ["walking-forward","walking-left","walking-right","walking-upstairs","walking-downstairs","run","jump","sitting","standing","sleeping","elevator-up","elevator-down"]
-
+        class_names =["walking-forward","walking-left","walking-right","walking-upstairs","walking-downstairs","running","jumping","sitting","standing","sleeping","elevator-up","elevator-down"]
+        
+#        print cnf_matrix
+        
         self.plot_confusion_matrix(cnf_matrix, class_names, title='Confusion matrix, without normalization' )
         
         
     def plot_confusion_matrix(self,cm, classes,
-                          normalize=True,
+                          normalize=False,
                           title='Confusion matrix',
                           cmap=plt.cm.Blues):
         """
