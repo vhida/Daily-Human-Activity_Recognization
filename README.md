@@ -1,11 +1,9 @@
-<<<<<<< HEAD
 # Daily-Human-Activity_Recognization
 ##How to Run
 `run run_me.py in Python3`
 
 ###Note
 
-=======
 # Daily-Human-Activity_Recognization
 
 
@@ -21,10 +19,8 @@
 `run oneVSOneSVN and oneVSAll for ensemble`
 
 
-###Note
 
 
 
 
 
->>>>>>> b3cca5a2213a9417abd9e6d1192297c458f43dbe
