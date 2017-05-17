@@ -1,14 +1,7 @@
 # Daily-Human-Activity_Recognization
-##How to Run
-`run run_me.py in Python3`
+This project experiments with Machine Learning algorithms and techniques for Human Activity Recognization problems. 
 
-###Note
-
-# Daily-Human-Activity_Recognization
-
-
-##How to Run
-
+## How to Run
 
 `run run_me.py in Python3 to process raw data`   
 
